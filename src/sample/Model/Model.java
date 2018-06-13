@@ -1,7 +1,6 @@
 package sample.Model;
 
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import sample.Model.DataBase.*;
 import sample.Model.Email.SendEmail;
 
@@ -66,11 +65,6 @@ public class Model extends Observable implements IModel {
     }
 
     @Override
-    public boolean addExam(String Date, int cpsId, String moad) {
-        return db.addExam(Date,cpsId,moad);
-    }
-
-    @Override
     public ObservableList<UserGrade> getUserExams(String UserName) throws Exception {
         return db.getUserExams(UserName);
     }
@@ -80,69 +74,29 @@ public class Model extends Observable implements IModel {
         return db.getUserCourses(UserName);
     }
 
-
-
-
-
-
-
-
-
-
     @Override
-    public String getUserProduct(int id)throws Exception {
-        return db.getUserProduct(id);
+    public String getPasswordUser(String username)throws Exception{
+        return db.getPasswordUser(username);
     }
 
     @Override
-    public void addProduct(String email, String productName, String priceString, int donation, int swap, String category) throws Exception {
-        if(email.length() == 0|| productName.length() == 0  || priceString.length() == 0 || category.length() == 0){
-            throw new InterruptedException();
-        }
-        if(priceString.matches("[a-zA-Z_]+"))throw new NumberFormatException();
-        Double price = Double.valueOf(priceString);
-        db.addProduct(productName,price,donation,swap,0,0,category,email);
+    public boolean addUserPassword(String userName,String password) throws Exception{
+        return db.addUserPassword(userName,password);
     }
 
     @Override
-    public void addOrder(int productId, String renterEmail ,String tenantEmail) throws Exception {
-        db.addOrder(productId,renterEmail,tenantEmail);
+    public boolean addExam(String courseName, String semester, String year, String moad, String date)throws Exception{
+        return db.addExam(courseName, semester, year, moad, date);
     }
 
     @Override
-    public void addSwap(int productID1,String renterEmail1,int productID2,String renterEmail2) throws Exception{
-        db.addSwap(productID1,renterEmail1,productID2,renterEmail2);
-    }
-
-
-    public ObservableList<ProductShow> productsPrice(Double price) throws Exception {
-        return db.getAllProductsPrice(price);
-
+    public ObservableList<Lecturer> getAllLecturers()throws Exception{
+        return db.getAllLecturers();
     }
 
     @Override
-    public boolean hasOrders(String email) throws Exception{
-        return db.hasOrders(email);
-    }
-
-    @FXML
-    public boolean hasProducts(String email) throws Exception{
-        return db.hasProducts(email);
-    }
-
-    @Override
-    public ObservableList<ProductShow> getUserOrders(String email) throws Exception{
-        return db.getUserOrders(email);
-    }
-
-    @Override
-    public ObservableList<ProductShow> allProductsInDataBase() throws Exception {
-        return db.getAllProducts();
-    }
-
-    @Override
-    public ObservableList<ProductShow> getUserProducts(String email) throws Exception{
-        return db.getUserProducts(email);
+    public boolean addCPS(String courseName,String Semester,String year,String courseManager)throws Exception{
+        return db.addCPS(courseName, Semester, year, courseManager);
     }
 
 }

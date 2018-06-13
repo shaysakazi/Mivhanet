@@ -12,8 +12,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import sample.Model.DataBase.Courses;
+import sample.Model.DataBase.Lecturer;
 import sample.ViewModel.ViewModel;
-
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -24,6 +24,7 @@ public class CoursePerSemester implements Observer {
     @FXML
     public ChoiceBox cb_course;
     public ChoiceBox cb_semester;
+    public ChoiceBox cb_year;
     public ChoiceBox cb_cm;
 
     public void setViewModel(ViewModel viewModel) {
@@ -34,6 +35,7 @@ public class CoursePerSemester implements Observer {
     private void initializeCoursePerSemester() {
         try {
             cb_semester.setItems(FXCollections.observableArrayList("A","B","C"));
+            cb_year.setItems(FXCollections.observableArrayList("2017","2018"));
 
             ObservableList<Courses> courses = viewModel.getAllCourses();
             ArrayList<String> coursesName = new ArrayList();
@@ -42,14 +44,12 @@ public class CoursePerSemester implements Observer {
             }
             cb_course.setItems(FXCollections.observableArrayList(coursesName));
 
-            /*
-            ObservableList<Courses> lectures = viewModel.getAllLectures();
+            ObservableList<Lecturer> lectures = viewModel.getAllLecturers();
             ArrayList<String> lecturesName = new ArrayList();
-            for (Lectures l : lectures){
-                lecturesName.add(l.getLctureName());
+            for (Lecturer l : lectures){
+                lecturesName.add(l.getLecturerName());
             }
-            //cb_cm.setItems(FXCollections.observableArrayList(viewModel.getAllLectures));
-            */
+            cb_cm.setItems(FXCollections.observableArrayList(lecturesName));
 
         }
         catch (Exception e) {
@@ -77,15 +77,23 @@ public class CoursePerSemester implements Observer {
 
     public void createNewCourse(ActionEvent actionEvent) {
         try{
-            //viewModel.createNewCourse((String)cb_course.getValue(),(String)cb_semester.getValue(),(String)cb_cm.getValue());
-            cancel(actionEvent);
-            showAlert("new CPS","Course " + (String)cb_course.getValue() + " semester " +
-                    (String)cb_semester.getValue() + " manager " + (String)cb_cm.getValue() + " has been added");
+            String course = (String)cb_course.getValue();
+            String semester = (String)cb_semester.getValue();
+            String year = (String)cb_year.getValue();
+            String cm = (String)cb_cm.getValue();
+
+            if(viewModel.addCPS(course,semester,year,cm)){
+                cancel(actionEvent);
+                showAlert("new CPS","Course " + course +  " Year " + year + " semester " +
+                        semester + " manager " + cm + " has been added");
+            }
+            else{
+                showAlert("Error","no such data");
+            }
         }
         catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     private void showAlert(String alertTopic,String alertMessage) {

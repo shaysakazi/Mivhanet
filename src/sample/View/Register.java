@@ -10,7 +10,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.ViewModel.ViewModel;
-
 import javax.mail.MessagingException;
 import java.util.Observable;
 import java.util.Observer;

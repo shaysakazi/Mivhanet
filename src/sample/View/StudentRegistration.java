@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.ViewModel.ViewModel;
-
 import java.util.Observable;
 import java.util.Observer;
 
@@ -35,15 +34,16 @@ public class StudentRegistration implements Observer {
     public void addPassword(ActionEvent actionEvent){
         try{
             String password = tf_password.getCharacters().toString();
-            //viewModel.changeStudentPassword(studentName,password);
+            viewModel.addUserPassword(studentName,password);
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader();
             Parent root = fxmlLoader.load(getClass().getResource("Student.fxml").openStream());
             stage.setTitle("Student Dash");
             stage.setScene(new Scene(root, 500, 400));
-            Student student = fxmlLoader.getController();
-            student.setViewModel(viewModel);
-            viewModel.addObserver(student);
+            Student studentView = fxmlLoader.getController();
+            studentView.setStudentName(studentName);
+            studentView.setViewModel(viewModel);
+            viewModel.addObserver(studentView);
             stage.show();
             ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
             showAlert("New Password",studentName + " you have change your password");

@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import sample.ViewModel.ViewModel;
-
 import java.util.Observable;
 import java.util.Observer;
 

@@ -2,7 +2,6 @@ package sample.Model.DataBase;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.Pair;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,8 +21,8 @@ public class Db {
             try {
                 instance = new Db();
             } catch (Exception e) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+        }
         }
     }
 
@@ -42,7 +41,6 @@ public class Db {
         stmt.execute("CREATE TABLE IF NOT EXISTS orders(id INTEGER PRIMARY KEY,productId INTEGER NOT NULL ,renterEmail VARCHAR NOT NULL,tenantEmail VARCHAR NOT NULL,FOREIGN KEY (productId) REFERENCES products(id),FOREIGN KEY (renterEmail) REFERENCES users(email),FOREIGN KEY (tenantEmail) REFERENCES users(email));");
         stmt.execute("CREATE TABLE IF NOT EXISTS swaps(id INTEGER  PRIMARY KEY,productId1 INTEGER NOT NULL,renterEmail1 VARCHAR NOT NULL ,productId2 INTEGER  NOT NULL,renterEmail2 VARCHAR NOT NULL,FOREIGN KEY (renterEmail2) REFERENCES users(email),FOREIGN KEY (renterEmail1) REFERENCES users(email),FOREIGN KEY (productId1) REFERENCES products(id),FOREIGN KEY (productId2) REFERENCES products(id));");*/
     }
-
 
     public String getPasswordUser(String username)throws Exception {
         Connection conn = SqliteHelper.getConn();
@@ -147,8 +145,6 @@ public class Db {
            return false;
         }
         return true;
-
-
     }
 
     public User getUser(String UserName) throws Exception {
@@ -223,222 +219,167 @@ public class Db {
 
     }
 
-
-
-    public String getUserProduct(int id) throws Exception {
+    public String getUserId(String UserName) throws Exception{
         Connection conn = SqliteHelper.getConn();
-        String query = "SELECT * FROM products WHERE id LIKE "+"'"+id+"'"+";";
+        String query = "SELECT ID FROM users WHERE UserName LIKE "+"'"+UserName+"'"+";";
         PreparedStatement ps=conn.prepareStatement(query);
         ResultSet rs=ps.executeQuery();
-
-        return rs.getString("userEmail");
+        return rs.getString("ID");
     }
 
-    public void addProduct(String name, Double price ,int donation,int swap,int available,double rating,String category,String userEmail) throws Exception {
+    public String getCourseId(String courseName) throws Exception{
         Connection conn = SqliteHelper.getConn();
-        String INSERT_SQL = "INSERT INTO products( name, price, donation, swap, available,rating,category,userEmail) VALUES( ?, ?, ?, ?, ?,?,?,?)";
-        PreparedStatement ps=conn.prepareStatement(INSERT_SQL);
-        //ps.setInt(1,getRowCount("products")+1);
-        ps.setString(1, name);
-        ps.setDouble(2, price);
-        ps.setInt(3, donation);
-        ps.setInt(4, swap);
-        ps.setInt(5, available);
-        ps.setDouble(6, rating);
-        ps.setString(7, category);
-        ps.setString(8, userEmail);
-        ps.executeUpdate();
+        String query = "SELECT ID FROM Courses WHERE CourseName LIKE "+"'"+courseName+"'"+";";
+        PreparedStatement ps=conn.prepareStatement(query);
+        ResultSet rs=ps.executeQuery();
+        return rs.getString("ID");
+    }
 
-        //Set Renter hasProducts
-        String sql = "UPDATE users SET hasProducts = '1' WHERE email LIKE "+"'"+userEmail+"'"+";";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.executeUpdate();
+    public String getSemesterId(String semester, String year)throws Exception{
+        Connection conn = SqliteHelper.getConn();
+        String query = "SELECT ID FROM Semester WHERE Semester LIKE "+"'"+semester+"'"+" AND year LIKE "+"'"+year+"'"+";";
+        PreparedStatement ps=conn.prepareStatement(query);
+        ResultSet rs=ps.executeQuery();
+        return rs.getString("ID");
+    }
 
+    public String getCPSIdByManager(String managerID) throws Exception{
+        Connection conn = SqliteHelper.getConn();
+        String query = "SELECT ID FROM CoursePerSemester WHERE Manager LIKE "+"'"+managerID+"'"+";";
+        PreparedStatement ps=conn.prepareStatement(query);
+        ResultSet rs=ps.executeQuery();
+        return rs.getString("ID");
+    }
+
+    public String getCPSIdBySemesterIdAndCourseId(String courseId,String semesterId) throws Exception{
+        Connection conn = SqliteHelper.getConn();
+        String query = "SELECT ID FROM CoursePerSemester WHERE courseID  LIKE "+"'"+courseId+"'"+" AND semesterID LIKE "+"'"+semesterId+"'"+";";
+        PreparedStatement ps=conn.prepareStatement(query);
+        ResultSet rs=ps.executeQuery();
+        return rs.getString("ID");
+    }
+
+    public boolean addCPS(String courseName,String Semester,String year,String courseManager)throws Exception{
+        Connection conn = null;
+        try {
+            conn = SqliteHelper.getConn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            String courseID = getCourseId(courseName);
+            String semesterID = getSemesterId(Semester,year);
+            String manager = getUserId(courseManager);
+            String role = getRoleUser(courseManager);
+
+            Statement stmt = conn.createStatement();
+            String INSERT_SQL = "INSERT INTO CoursePerSemester(courseID,semesterID,Manager) VALUES(?, ?, ?)";
+            PreparedStatement ps=conn.prepareStatement(INSERT_SQL);
+            ps.setString(1, courseID);
+            ps.setString(2, semesterID);
+            ps.setString(3, manager);
+            ps.executeUpdate();
+            addCourseStuff(manager,role);
+        } catch (SQLException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean addCourseStuff(String userId, String role)throws Exception{
+        Connection conn = null;
+        try {
+            conn = SqliteHelper.getConn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            String cpsId = getCPSIdByManager(userId);
+            Statement stmt = conn.createStatement();
+            String INSERT_SQL = "INSERT INTO CourseStaff(userID,CPSID,Role) VALUES(?,?,?)";
+            PreparedStatement ps=conn.prepareStatement(INSERT_SQL);
+            ps.setString(1, userId);
+            ps.setString(2, cpsId);
+            ps.setString(3, role);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
 
     }
 
-    public void addOrder(int productId, String renterEmail ,String tenantEmail) throws Exception {
-        Connection conn = SqliteHelper.getConn();
-        String INSERT_SQL = "INSERT INTO orders(id, productId, renterEmail, tenantEmail) VALUES(?, ?, ?, ?)";
-        //add Order to Order Table
-        PreparedStatement ps = conn.prepareStatement(INSERT_SQL);
-       // ps.setInt(1, getRowCount("orders") + 1);
-        ps.setInt(2, productId);
-        ps.setString(3, renterEmail);
-        ps.setString(4, tenantEmail);
-        ps.executeUpdate();
+    public boolean addExam(String courseName, String semester, String year, String moad,String date)throws Exception{
+        Connection conn = null;
+        try {
+            conn = SqliteHelper.getConn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            String courseId = getCourseId(courseName);
+            String semesterId = getSemesterId(semester,year);
+            String cpsId = getCPSIdBySemesterIdAndCourseId(courseId,semesterId);
 
-        //set the ordered product as not available
-        String sql = "UPDATE products SET available = '1' WHERE id LIKE "+"'"+productId+"'"+";";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.executeUpdate();
-
-    }
-
-    public void addSwap(int productID1,String renterEmail1,int productID2,String renterEmail2) throws Exception {
-        Connection conn = SqliteHelper.getConn();
-        String INSERT_SQL = "INSERT INTO swaps( productId1, renterEmail1,productId2, renterEmail2) VALUES(?, ?, ?, ?)";
-        //add Order to Order Table
-        PreparedStatement ps = conn.prepareStatement(INSERT_SQL);
-        ps.setInt(1, productID1);
-        ps.setString(2, renterEmail1);
-        ps.setInt(3, productID2);
-        ps.setString(4, renterEmail2);
-        ps.executeUpdate();
-        //set the ordered product as not available
-        String sql1 = "UPDATE products SET available = '1' WHERE id LIKE "+"'"+productID1+"'"+";";
-        PreparedStatement pstmt1 = conn.prepareStatement(sql1);
-        pstmt1.executeUpdate();
-        String sql2 = "UPDATE products SET available = '1' WHERE id LIKE "+"'"+productID2+"'"+";";
-        PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-        pstmt2.executeUpdate();
-
+            Statement stmt = conn.createStatement();
+            String INSERT_SQL = "INSERT INTO Exams(Date,CpsID,Moad) VALUES(?,?,?)";
+            PreparedStatement ps=conn.prepareStatement(INSERT_SQL);
+            ps.setString(1, date);
+            ps.setString(2, cpsId);
+            ps.setString(3, moad);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
 
     }
 
-    public ObservableList<ProductShow> getAllProducts() throws Exception {
+    public ObservableList<Lecturer> getAllLecturers()throws Exception{
         Connection conn = SqliteHelper.getConn();
-        String query = "SELECT id,category,name,price,swap,donation FROM products WHERE available='0'";
+        String query = "select UserName from Users where Role = 'Lecturer'";
         PreparedStatement ps=conn.prepareStatement(query);
         ResultSet rs= ps.executeQuery();
         if (!rs.isBeforeFirst() ) {
             return null;
         }
-        List<ProductShow> listProducts=new ArrayList<ProductShow>();
+
+        List<Lecturer> listProducts = new ArrayList<Lecturer>();
+
         while(rs.next()){
-            listProducts.add(new ProductShow(rs.getInt("id"),rs.getString("category"),rs.getString("name"),rs.getDouble("price"),rs.getInt("swap"),rs.getInt("donation")));
+            listProducts.add(new Lecturer(rs.getString("UserName")));
         }
 
-        ObservableList<ProductShow> listOfProducts = FXCollections.observableList(listProducts);
+        ObservableList<Lecturer> listOfProducts = FXCollections.observableList(listProducts);
 
         return listOfProducts;
     }
 
-    public ObservableList<ProductShow> getUserProducts(String email) throws Exception {
-        Connection conn = SqliteHelper.getConn();
-        String query = "SELECT * FROM products WHERE userEmail LIKE "+"'"+email+"'"+";";
-        PreparedStatement ps=conn.prepareStatement(query);
-        ResultSet rs=ps.executeQuery();
-        if (!rs.isBeforeFirst() ) {
-            return null;
+    public boolean addUserPassword(String userName,String password) throws Exception{
+        Connection conn = null;
+        try {
+            conn = SqliteHelper.getConn();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        List<ProductShow> listProducts=new ArrayList<ProductShow>();
-        while(rs.next()){
-            listProducts.add(new ProductShow(rs.getInt("id"),rs.getString("category"),rs.getString("name"),rs.getDouble("price"),rs.getInt("swap"),rs.getInt("donation")));
-        }
-
-        ObservableList<ProductShow> listOfProducts = FXCollections.observableList(listProducts);
-
-        return listOfProducts;
-    }
-
-    public ObservableList<ProductShow> getAllProductsPrice(double price) throws Exception{
-        Connection conn = SqliteHelper.getConn();
-        String query = "SELECT * FROM products WHERE price<"+"'"+price+"'"+";";
-        PreparedStatement ps=conn.prepareStatement(query);
-        ResultSet rs=ps.executeQuery();
-        if (!rs.isBeforeFirst() ) {
-            return null;
-        }
-        List<ProductShow> listProducts=new ArrayList<ProductShow>();
-        while(rs.next()){
-            listProducts.add(new ProductShow(rs.getInt("id"),rs.getString("category"),rs.getString("name"),rs.getDouble("price"),rs.getInt("swap"),rs.getInt("donation")));
-        }
-        ObservableList<ProductShow> listOfProducts = FXCollections.observableList(listProducts);
-
-
-        return listOfProducts;
-    }
-
-    public ObservableList<Pair<ProductShow,ProductShow>> getAllSwaps(String email) throws Exception {
-        Connection conn = SqliteHelper.getConn();
-        String query = "SELECT * FROM swaps WHERE renterEmail1 LIKE "+"'"+email+"'"+" OR "+"renterEmail2 LIKE "+"'"+email+"'"+";";
-        PreparedStatement ps=conn.prepareStatement(query);
-        ResultSet rs=ps.executeQuery();
-        if (!rs.isBeforeFirst() ) {
-            return null;
-        }
-        List<Pair<ProductShow,ProductShow>> listProducts=new ArrayList<>();
-        while(rs.next()){
-            String queryProduct1 = "SELECT * FROM products WHERE id LIKE "+"'"+rs.getInt("id")+"'"+";";
-            String queryProduct2 = "SELECT * FROM products WHERE id LIKE "+"'"+rs.getInt("id")+"'"+";";
-            PreparedStatement ps1=conn.prepareStatement(queryProduct1);
-            ResultSet rs1=ps1.executeQuery();
-            ProductShow product1=new ProductShow(rs1.getInt("id"),rs1.getString("category"),rs1.getString("name"),rs1.getDouble("price"),rs1.getInt("swap"),rs1.getInt("donation"));
-            PreparedStatement ps2=conn.prepareStatement(queryProduct2);
-            ResultSet rs2=ps2.executeQuery();
-            ProductShow product2=new ProductShow(rs2.getInt("id"),rs2.getString("category"),rs2.getString("name"),rs2.getDouble("price"),rs2.getInt("swap"),rs2.getInt("donation"));
-            if(isMyProduct(product1.getId(),email))
-                listProducts.add(new Pair<ProductShow,ProductShow>(product1,product2));
-            else
-                listProducts.add(new Pair<ProductShow,ProductShow>(product2,product1));
-
-        }
-
-        ObservableList<Pair<ProductShow,ProductShow>> listOfProducts = FXCollections.observableList(listProducts);
-
-        return listOfProducts;
-    }
-
-    public boolean isMyProduct(int productID,String email) throws Exception {
-        Connection conn = SqliteHelper.getConn();
-        String query = "SELECT * FROM products WHERE id LIKE "+"'"+productID+"'"+" AND "+"userEmail LIKE "+"'"+email+"'"+";";
-        PreparedStatement ps=conn.prepareStatement(query);
-        ResultSet rs=ps.executeQuery();
-        if (!rs.isBeforeFirst() ) {
+        try {
+            String sql1 = "UPDATE Users SET Password= "+"'"+password+"'"+"  WHERE  UserName ="+"'"+userName+"'"+" ;";
+            PreparedStatement pstmt1 = conn.prepareStatement(sql1);
+            pstmt1.executeUpdate();
+        } catch (SQLException e) {
             return false;
         }
-        else
-            return true;
+        return true;
     }
 
-    public boolean hasOrders(String email) throws Exception {
+    public String getUserPassword(String userName)throws Exception{
         Connection conn = SqliteHelper.getConn();
-        String query = "SELECT * FROM orders WHERE tenantEmail LIKE "+"'"+email+"'"+";";
+        String query = "SELECT Password FROM Users WHERE UserName LIKE "+"'"+userName+"'"+";";
         PreparedStatement ps=conn.prepareStatement(query);
         ResultSet rs=ps.executeQuery();
-        if (!rs.isBeforeFirst() ) {
-            return false;
-        }
-        else
-            return true;
+        return rs.getString("Password");
     }
-
-    public boolean hasProducts(String email) throws Exception {
-        Connection conn = SqliteHelper.getConn();
-        String query = "SELECT * FROM products WHERE userEmail LIKE "+"'"+email+"'"+";";
-        PreparedStatement ps=conn.prepareStatement(query);
-        ResultSet rs=ps.executeQuery();
-        if (!rs.isBeforeFirst() ) {
-            return false;
-        }
-        else
-            return true;
-    }
-
-    public ObservableList<ProductShow> getUserOrders(String email) throws Exception{
-        Connection conn = SqliteHelper.getConn();
-        String query = "SELECT * FROM orders WHERE tenantEmail LIKE "+"'"+email+"'"+";";
-        PreparedStatement ps=conn.prepareStatement(query);
-        ResultSet rs=ps.executeQuery();
-        if (!rs.isBeforeFirst() ) {
-            return null;
-        }
-        List<ProductShow> orders=new ArrayList<ProductShow>();
-        while(rs.next()){
-            String queryProduct1 = "SELECT * FROM products WHERE id LIKE "+"'"+rs.getInt("productId")+"'"+";";
-            PreparedStatement ps1=conn.prepareStatement(queryProduct1);
-            ResultSet rs1=ps1.executeQuery();
-            ProductShow product1=new ProductShow(rs1.getInt("id"),rs1.getString("category"),rs1.getString("name"),rs1.getDouble("price"),rs1.getInt("swap"),rs1.getInt("donation"));
-            orders.add(product1);
-        }
-        ObservableList<ProductShow> listOfProducts = FXCollections.observableList(orders);
-
-
-        return listOfProducts;
-    }
-
-
 }
 
 

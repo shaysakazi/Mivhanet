@@ -20,33 +20,17 @@ public interface IModel {
 
     ObservableList<Semester> getAllSemester() throws Exception;
 
-    boolean addExam(String Date,int cpsId,String moad);
-
     ObservableList<UserGrade> getUserExams(String UserName)throws Exception;
 
     ObservableList<UserCourse> getUserCourses(String UserName) throws Exception;
 
+    String getPasswordUser(String username)throws Exception;
 
+    boolean addUserPassword(String userName,String password)throws Exception;
 
+    boolean addExam(String courseName, String semester, String year, String moad, String date)throws Exception;
 
+    ObservableList<Lecturer> getAllLecturers()throws Exception;
 
-
-
-    void addProduct(String email, String productName, String price, int donation, int swap, String category) throws Exception;
-
-    ObservableList<ProductShow> allProductsInDataBase()throws Exception;
-
-    String getUserProduct(int id)throws Exception;
-
-    void addOrder(int productId, String renterEmail, String tenantEmail) throws Exception;
-
-    ObservableList<ProductShow> getUserProducts(String email) throws Exception;
-
-    void addSwap(int productID1, String renterEmail1, int productID2, String renterEmail2) throws Exception;
-
-    boolean hasOrders(String email) throws Exception;
-
-    ObservableList<ProductShow> getUserOrders(String email) throws Exception;
-
-    boolean hasProducts(String email) throws Exception;
+    boolean addCPS(String courseName, String Semester, String year, String courseManager)throws Exception;
 }

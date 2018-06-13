@@ -1,5 +1,6 @@
 package sample.View;
 
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +13,6 @@ import javafx.stage.Stage;
 import sample.Model.DataBase.UserCourse;
 import sample.Model.DataBase.UserGrade;
 import sample.ViewModel.ViewModel;
-
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -35,7 +35,7 @@ public class Student implements Observer {
 
     public void setStudentName(String studentName) {
         this.studentName = studentName;
-        l_name.setText("hello, " + studentName);
+        l_name.setText("hello " + studentName + ",");
     }
 
     public void logOff(ActionEvent actionEvent){
@@ -64,6 +64,14 @@ public class Student implements Observer {
             ObservableList<UserCourse> ol_userCourse = viewModel.getUserCourses(studentName);
             ObservableList<UserGrade> ol_userExam = viewModel.getUserExams(studentName);
 
+            if(ol_userCourse == null){
+                ol_userCourse = new SimpleListProperty<>();
+            }
+
+            if(ol_userExam == null){
+                ol_userExam = new SimpleListProperty<>();
+            }
+
             for (UserCourse uc : ol_userCourse){
                 courses.add(uc.getCourse());
             }
@@ -75,15 +83,16 @@ public class Student implements Observer {
             for (String c : courses) {
                 sbC.append(c + "\n");
             }
-            sbC.append("total of " + courses.size() + " courses");
+            sbC.append("Total of " + courses.size() + " courses");
 
             for (String e : exams) {
                 sbE.append(e + "\n");
             }
-            sbE.append("total of " + exams.size() + " exams");
+            sbE.append("Total of " + exams.size() + " exams");
 
             l_course.setText(sbC.toString());
             l_exam.setText(sbE.toString());
+
         }
         catch(Exception e){
             e.printStackTrace();

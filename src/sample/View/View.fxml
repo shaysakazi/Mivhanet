@@ -17,7 +17,6 @@
             <Button fx:id="btn_login" layoutX="146.0" layoutY="171.0" mnemonicParsing="false" onAction="#login" prefHeight="43.0" prefWidth="194.0" style="-fx-background-color: #2ac335;" text="Login" textFill="WHITE" />
             <Label layoutX="14.0" layoutY="60.0" text="User Name:" />
             <Label layoutX="14.0" layoutY="119.0" text="Password:" />
-            <Button onAction="#test" layoutX="114.0" layoutY="335.0" mnemonicParsing="false" text="Button" />
 
             <!--><ImageView fitWidth="150" layoutX="156.0" layoutY="251.0" preserveRatio="true">
                <image>

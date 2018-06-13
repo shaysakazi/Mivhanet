@@ -13,13 +13,15 @@
             <Button fx:id="btn_back" onAction="#cancel" layoutX="296.0" layoutY="280.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="130.0" style="-fx-background-color: #dc3639;" text="Cancel" textFill="WHITE" />
             <Button fx:id="btn_course" onAction="#createNewCourse" layoutX="46.0" layoutY="280.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="130.0" style="-fx-background-color: #2ac335;" text="Create New CPS" textFill="WHITE" />
 
-            <ChoiceBox fx:id="cb_course" layoutX="46.0" layoutY="142.0" prefHeight="70.0" prefWidth="100.0" />
-            <ChoiceBox fx:id="cb_semester" layoutX="196.0" layoutY="141.0" prefHeight="70.0" prefWidth="100.0" />
-            <ChoiceBox fx:id="cb_cm" layoutX="340.0" layoutY="138.0" prefHeight="70.0" prefWidth="100.0" />
+            <ChoiceBox fx:id="cb_course" layoutX="10.0" layoutY="138.0" prefHeight="70.0" prefWidth="100.0" />
+            <ChoiceBox fx:id="cb_semester" layoutX="130.0" layoutY="138.0" prefHeight="70.0" prefWidth="100.0" />
+            <ChoiceBox fx:id="cb_year" layoutX="250.0" layoutY="138.0" prefHeight="70.0" prefWidth="100.0" />
+            <ChoiceBox fx:id="cb_cm" layoutX="370.0" layoutY="138.0" prefHeight="70.0" prefWidth="100.0" />
 
-             <Label layoutX="68.0" layoutY="96.0" prefHeight="34.0" prefWidth="56.0" text="Course" />
-            <Label layoutX="213.0" layoutY="96.0" prefHeight="34.0" prefWidth="66.0" text="Semester" />
-            <Label layoutX="334.0" layoutY="96.0" prefHeight="34.0" prefWidth="112.0" text="Course Manager" />
+            <Label layoutX="35.0" layoutY="96.0" prefHeight="34.0" prefWidth="56.0" text="Course" />
+            <Label layoutX="155.0" layoutY="96.0" prefHeight="34.0" prefWidth="66.0" text="Semester" />
+             <Label layoutX="285.0" layoutY="96.0" prefHeight="34.0" prefWidth="56.0" text="Year" />
+             <Label layoutX="365.0" layoutY="96.0" prefHeight="34.0" prefWidth="112.0" text="Course Manager" />
 
          </children>
       </Pane>

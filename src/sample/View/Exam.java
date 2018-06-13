@@ -14,7 +14,6 @@ import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 import sample.Model.DataBase.Courses;
 import sample.ViewModel.ViewModel;
-
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -23,7 +22,9 @@ public class Exam implements Observer {
     private ViewModel viewModel;
 
     @FXML
-    public ChoiceBox cb_cps;
+    public ChoiceBox cb_course;
+    public ChoiceBox cb_semester;
+    public ChoiceBox cb_year;
     public ChoiceBox cb_moed;
     public DatePicker dp_date;
 
@@ -34,14 +35,16 @@ public class Exam implements Observer {
 
     private void initializeExam(){
         try {
+            cb_moed.setItems(FXCollections.observableArrayList("A","B","C"));
+            cb_semester.setItems(FXCollections.observableArrayList("A","B","C"));
+            cb_year.setItems(FXCollections.observableArrayList("2017","2018"));
+
             ObservableList<Courses> courses = viewModel.getAllCourses();
             ArrayList<String> coursesName = new ArrayList();
             for (Courses c : courses){
                 coursesName.add(c.getCourseName());
             }
-
-            cb_cps.setItems(FXCollections.observableArrayList(coursesName));
-            cb_moed.setItems(FXCollections.observableArrayList("A","B","C"));
+            cb_course.setItems(FXCollections.observableArrayList(coursesName));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -68,14 +71,20 @@ public class Exam implements Observer {
 
     public void createNewExam(ActionEvent actionEvent) {
         try{
-            String cps = (String)cb_cps.getValue();
+            String course = (String)cb_course.getValue();
+            String semester = (String)cb_semester.getValue();
+            String year = (String)cb_year.getValue();
             String moed = (String)cb_moed.getValue();
             String date = dp_date.getValue().toString();
 
-            //viewModel.createExam(,(String)cb_semester.getValue(),(String)cb_cm.getValue());
-            cancel(actionEvent);
-            showAlert("new Exam","course " + cps + " moed " + moed +
-                    " date " + date +" has been added");
+            if(viewModel.addExam(course,semester,year,moed,date)){
+                cancel(actionEvent);
+                showAlert("new Exam","course " + course + " semester " + semester + " year " + year
+                        + " moed " + moed + " date " + date +" has been added");
+            }
+            else{
+                showAlert("Error","no such data");
+            }
         }
         catch (Exception e){
             e.printStackTrace();

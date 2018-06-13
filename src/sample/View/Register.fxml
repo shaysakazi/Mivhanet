@@ -13,10 +13,10 @@
             <TextField fx:id="tf_userName" layoutX="117.0" layoutY="22.0" prefHeight="31.0" prefWidth="314.0" />
             <TextField fx:id="tf_email" layoutX="117.0" layoutY="62.0" prefHeight="31.0" prefWidth="314.0" />
             <TextField fx:id="tf_userType" layoutX="117.0" layoutY="110.0" prefHeight="31.0" prefWidth="314.0" />
-            <TextField fx:id="tf_firstName" layoutX="117.0" layoutY="295.0" prefHeight="31.0" prefWidth="314.0" />
+            <TextField fx:id="tf_firstName" layoutX="117.0" layoutY="155.0" prefHeight="31.0" prefWidth="314.0" />
             <TextField fx:id="tf_lastName" layoutX="117.0" layoutY="197.0" prefHeight="31.0" prefWidth="314.0" />
             <TextField fx:id="tf_address" layoutX="117.0" layoutY="243.0" prefHeight="31.0" prefWidth="314.0" />
-            <TextField fx:id="tf_phone" layoutX="117.0" layoutY="155.0" prefHeight="31.0" prefWidth="314.0" />
+            <TextField fx:id="tf_phone" layoutX="117.0" layoutY="295.0" prefHeight="31.0" prefWidth="314.0" />
 
             <Button fx:id="btn_RegisterNow" layoutX="24.0" layoutY="363.0" mnemonicParsing="false" onAction="#registerUser" prefHeight="68.0" prefWidth="141.0" style="-fx-background-color: #2ac335;" text="Register" />
             <Button fx:id="btn_Cancel" layoutX="299.0" layoutY="363.0" mnemonicParsing="false" onAction="#cancel" prefHeight="68.0" prefWidth="141.0" style="-fx-background-color: #dc3639;" text="Cancel" />
