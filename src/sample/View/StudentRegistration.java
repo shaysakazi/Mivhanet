@@ -2,9 +2,14 @@ package sample.View;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import sample.ViewModel.ViewModel;
 
 import java.util.Observable;
@@ -27,10 +32,25 @@ public class StudentRegistration implements Observer {
         l_name.setText("hello, " + studentName);
     }
 
-    public void addPassword(ActionEvent actionEvent) {
-        String password = tf_password.getCharacters().toString();
-        //viewModel.changeStudentPassword(studentName,password);
-        showAlert("New Password",studentName + " you have change your password");
+    public void addPassword(ActionEvent actionEvent){
+        try{
+            String password = tf_password.getCharacters().toString();
+            //viewModel.changeStudentPassword(studentName,password);
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            Parent root = fxmlLoader.load(getClass().getResource("Student.fxml").openStream());
+            stage.setTitle("Student Dash");
+            stage.setScene(new Scene(root, 500, 400));
+            Student student = fxmlLoader.getController();
+            student.setViewModel(viewModel);
+            viewModel.addObserver(student);
+            stage.show();
+            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+            showAlert("New Password",studentName + " you have change your password");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void showAlert(String alertTopic,String alertMessage) {
