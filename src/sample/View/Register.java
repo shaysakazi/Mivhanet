@@ -24,7 +24,6 @@ public class Register implements Observer {
     public TextField tf_userType;
     public TextField tf_firstName;
     public TextField tf_lastName;
-    public TextField tf_id;
     public TextField tf_address;
     public TextField tf_phone;
 
@@ -40,12 +39,11 @@ public class Register implements Observer {
             String userType = tf_userType.getCharacters().toString();
             String firstName = tf_firstName.getCharacters().toString();
             String lastName = tf_lastName.getCharacters().toString();
-            String id = tf_id.getCharacters().toString();
             String address = tf_address.getCharacters().toString();
             String phone = tf_phone.getCharacters().toString();
 
-            //viewModel.senMail(fullName, email);
-            //viewModel.registerUser(fullName, email, password, age, payPalAccount);
+            viewModel.sendMail(userName, email);
+            viewModel.registerUser(userName, lastName, firstName, address, phone,email,userType,"");
             cancel(actionEvent);
             showAlert("New " + userType,"New " + userType + " name: " + userName + " has been added");
         }

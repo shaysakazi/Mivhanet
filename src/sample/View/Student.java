@@ -1,5 +1,6 @@
 package sample.View;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,22 +9,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import sample.Model.DataBase.UserCourse;
+import sample.Model.DataBase.UserGrade;
 import sample.ViewModel.ViewModel;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 public class Student implements Observer {
     private ViewModel viewModel;
     private String studentName;
-    private String[] courses;
-    private String[] exams;
+    private ArrayList<String> courses = new ArrayList<>();
+    private ArrayList<String> exams = new ArrayList<>();
 
     @FXML
     public Label l_name;
     public Label l_course;
     public Label l_exam;
-
 
     public void setViewModel(ViewModel viewModel) {
         this.viewModel = viewModel;
@@ -54,34 +57,37 @@ public class Student implements Observer {
     }
 
     private void initializeStudentController() {
-        StringBuilder sbC = new StringBuilder("Your courses: \n");
-        StringBuilder sbE = new StringBuilder("Your exams: \n");
+        try{
+            StringBuilder sbC = new StringBuilder("Your courses: \n");
+            StringBuilder sbE = new StringBuilder("Your exams: \n");
 
-        //courses = viewModel.getStudentCourses(studentName);
-        //exams = viewModel.getStudentExames(studentName);
+            ObservableList<UserCourse> ol_userCourse = viewModel.getUserCourses(studentName);
+            ObservableList<UserGrade> ol_userExam = viewModel.getUserExams(studentName);
 
-        courses = new String[2];
-        courses[0] = "nitoz";
-        courses[1] = "mmm";
+            for (UserCourse uc : ol_userCourse){
+                courses.add(uc.getCourse());
+            }
 
-        exams = new String[3];
-        exams[0] = "nitoz moed a";
-        exams[1] = "mmm moed a";
-        exams[2] = "mmm moed b";
+            for (UserGrade ug : ol_userExam){
+                exams.add(ug.getCourseName() + " moed " + ug.getMoad() + " grade " + ug.getGrade());
+            }
 
+            for (String c : courses) {
+                sbC.append(c + "\n");
+            }
+            sbC.append("total of " + courses.size() + " courses");
 
-        for (String c : courses) {
-            sbC.append(c + "\n");
+            for (String e : exams) {
+                sbE.append(e + "\n");
+            }
+            sbE.append("total of " + exams.size() + " exams");
+
+            l_course.setText(sbC.toString());
+            l_exam.setText(sbE.toString());
         }
-        sbC.append("total of " + courses.length + " courses");
-
-        for (String e : exams) {
-            sbE.append(e + "\n");
+        catch(Exception e){
+            e.printStackTrace();
         }
-        sbE.append("total of " + exams.length + " exams");
-
-        l_course.setText(sbC.toString());
-        l_exam.setText(sbE.toString());
     }
 
     @Override

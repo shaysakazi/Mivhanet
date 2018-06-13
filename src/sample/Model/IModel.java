@@ -30,6 +30,8 @@ public interface IModel {
 
 
 
+
+
     void addProduct(String email, String productName, String price, int donation, int swap, String category) throws Exception;
 
     ObservableList<ProductShow> allProductsInDataBase()throws Exception;

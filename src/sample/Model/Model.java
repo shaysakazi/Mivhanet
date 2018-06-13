@@ -77,8 +77,12 @@ public class Model extends Observable implements IModel {
 
     @Override
     public ObservableList<UserCourse> getUserCourses(String UserName) throws Exception {
-        return getUserCourses(UserName);
+        return db.getUserCourses(UserName);
     }
+
+
+
+
 
 
 

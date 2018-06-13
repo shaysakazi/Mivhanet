@@ -1,7 +1,6 @@
 package sample.ViewModel;
 import javafx.collections.ObservableList;
-import sample.Model.DataBase.ProductShow;
-import sample.Model.DataBase.User;
+import sample.Model.DataBase.*;
 import sample.Model.Model;
 
 import java.util.Observable;
@@ -26,6 +25,44 @@ public class ViewModel extends Observable implements Observer{
     public void login(String userName, String password) throws Exception {
         model.login(userName, password);
     }
+
+    public String GetUserRole(String userName)throws Exception{
+        return model.GetUserRole(userName);
+    }
+
+    public ObservableList<UserCourse> getUserCourses(String UserName) throws Exception{
+        return model.getUserCourses(UserName);
+    }
+
+    public ObservableList<UserGrade> getUserExams(String UserName) throws Exception{
+        return model.getUserExams(UserName);
+    }
+
+    public void sendMail(String name, String Email) throws Exception {
+        model.sendEmail(name,Email);
+    }
+
+    public void registerUser(String userName, String lastName, String firstName, String address,String phone, String mail,String role,String password)throws Exception{
+        model.registerUser(userName,lastName,firstName,address,phone,mail,role,password);
+    }
+
+    public ObservableList<Courses> getAllCourses() throws Exception{
+        return model.getAllCourses();
+    }
+
+    public boolean addExam(String Date, int cpsId, String moad){
+        return model.addExam(Date,cpsId,moad);
+    }
+
+
+
+
+
+
+
+
+
+
 
     public void registerUser(String name, String email,String password,String age, String PayPalAccount )throws Exception {
         //model.registerUser(name,email,password,age,PayPalAccount);
@@ -54,9 +91,7 @@ public class ViewModel extends Observable implements Observer{
         model.addSwap(productID1,renterEmail1,productID2,renterEmail2);
     }
 
-    public void senMail(String name, String Email) throws Exception {
-        model.sendEmail(name,Email);
-    }
+
 
     public ObservableList<ProductShow> productsPrice(Double price) throws Exception {
         return model.productsPrice(price);

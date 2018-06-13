@@ -1,6 +1,7 @@
 package sample.View;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,8 +11,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
+import sample.Model.DataBase.Courses;
 import sample.ViewModel.ViewModel;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -29,12 +32,29 @@ public class CoursePerSemester implements Observer {
     }
 
     private void initializeCoursePerSemester() {
-        //cb_course.setItems(FXCollections.observableArrayList(viewModel.getAllCourses));
-        cb_semester.setItems(FXCollections.observableArrayList("A","B","C"));
-        //cb_cm.setItems(FXCollections.observableArrayList(viewModel.getAllLectures));
+        try {
+            cb_semester.setItems(FXCollections.observableArrayList("A","B","C"));
 
-        cb_course.setItems(FXCollections.observableArrayList("mmm","nitoz"));
-        cb_cm.setItems(FXCollections.observableArrayList("guyShani","arnon"));
+            ObservableList<Courses> courses = viewModel.getAllCourses();
+            ArrayList<String> coursesName = new ArrayList();
+            for (Courses c : courses){
+                coursesName.add(c.getCourseName());
+            }
+            cb_course.setItems(FXCollections.observableArrayList(coursesName));
+
+            /*
+            ObservableList<Courses> lectures = viewModel.getAllLectures();
+            ArrayList<String> lecturesName = new ArrayList();
+            for (Lectures l : lectures){
+                lecturesName.add(l.getLctureName());
+            }
+            //cb_cm.setItems(FXCollections.observableArrayList(viewModel.getAllLectures));
+            */
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void cancel(ActionEvent actionEvent){
@@ -79,6 +99,5 @@ public class CoursePerSemester implements Observer {
     public void update(Observable o, Object arg) {
 
     }
-
 
 }

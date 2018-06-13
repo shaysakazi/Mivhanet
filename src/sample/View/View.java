@@ -30,18 +30,20 @@ public class View implements Observer {
 
     public void login(ActionEvent actionEvent){
         try {
-            viewModel.login(tf_username.getCharacters().toString(),tf_password.getCharacters().toString());
-            String role = /*viewModel.getRole(tf_email.getCharacters().toString());*/ "mazkira";
+            String userName = tf_username.getCharacters().toString();
+            String password = tf_password.getCharacters().toString();
+            viewModel.login(userName,password);
+            String role = viewModel.GetUserRole(userName);
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader();
-            Parent root = null;
+            Parent root;
             if(role.equals("student")){
                 root = fxmlLoader.load(getClass().getResource("Student.fxml").openStream());
                 stage.setTitle("Student Dash");
                 stage.setScene(new Scene(root, 500, 400));
                 Student studentView = fxmlLoader.getController();
+                studentView.setStudentName(userName);
                 studentView.setViewModel(viewModel);
-                studentView.setStudentName(tf_username.getCharacters().toString());
                 viewModel.addObserver(studentView);
             }
             else if(role.equals("mazkira")){
@@ -61,6 +63,16 @@ public class View implements Observer {
         }
         catch (Exception e){
             showAlert("login failed", "password or email is not correct");
+        }
+    }
+
+    public void test(ActionEvent actionEvent){
+        try {
+
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

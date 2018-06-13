@@ -1,6 +1,7 @@
 package sample.View;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
+import sample.Model.DataBase.Courses;
 import sample.ViewModel.ViewModel;
+
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -29,10 +33,19 @@ public class Exam implements Observer {
     }
 
     private void initializeExam(){
-        //cb_cps.setItems(FXCollections.observableArrayList(viewModel.getAllCPS));
-        cb_moed.setItems(FXCollections.observableArrayList("A","B","C"));
+        try {
+            ObservableList<Courses> courses = viewModel.getAllCourses();
+            ArrayList<String> coursesName = new ArrayList();
+            for (Courses c : courses){
+                coursesName.add(c.getCourseName());
+            }
 
-        cb_cps.setItems(FXCollections.observableArrayList("course: mmm, semster: A"));
+            cb_cps.setItems(FXCollections.observableArrayList(coursesName));
+            cb_moed.setItems(FXCollections.observableArrayList("A","B","C"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void cancel(ActionEvent actionEvent){
@@ -55,11 +68,14 @@ public class Exam implements Observer {
 
     public void createNewExam(ActionEvent actionEvent) {
         try{
-            //viewModel.createExam((String)cb_cps.getValue(),(String)cb_semester.getValue(),(String)cb_cm.getValue());
+            String cps = (String)cb_cps.getValue();
+            String moed = (String)cb_moed.getValue();
+            String date = dp_date.getValue().toString();
+
+            //viewModel.createExam(,(String)cb_semester.getValue(),(String)cb_cm.getValue());
             cancel(actionEvent);
-            showAlert("new Exam","CPS " + (String)cb_cps.getValue() + " semester " +
-                    (String)cb_cps.getValue() +   " moed " + (String)cb_moed.getValue() +
-                    " date " + dp_date.getValue().toString() +" has been added");
+            showAlert("new Exam","course " + cps + " moed " + moed +
+                    " date " + date +" has been added");
         }
         catch (Exception e){
             e.printStackTrace();
