@@ -37,7 +37,7 @@ public class Model extends Observable implements IModel {
             if(!mail.contains("@")){
                 throw new Exception();
             }
-            if(phone.matches("[a-zA-Z_]+"))throw new NumberFormatException();
+            if(phone.matches("[a-zA-Z_]+") || phone.length()!=10)throw new NumberFormatException();
             int phoneNumber = Integer.parseInt(phone);
 
             boolean ans = db.addUser(userName,lastName,firstName,address,phoneNumber,mail,role,password);
@@ -81,6 +81,7 @@ public class Model extends Observable implements IModel {
 
     @Override
     public boolean addUserPassword(String userName,String password) throws Exception{
+        if(password.length()<8) throw new InterruptedException();
         return db.addUserPassword(userName,password);
     }
 

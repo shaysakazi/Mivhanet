@@ -47,7 +47,7 @@ public class Register implements Observer {
             showAlert("New " + userType,"New " + userType + " name: " + userName + " has been added");
         }
         catch (NumberFormatException e) {
-            showAlert("Register failed", "The age is not correct, please add the age between 18 and 120");
+            showAlert("Register failed", "Please provide a valid phone number");
         }
         catch (ArrayStoreException e) {
             showAlert("Register failed", "The email is already in the system, Please try again...");

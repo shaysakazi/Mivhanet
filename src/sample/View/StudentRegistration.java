@@ -8,9 +8,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 import sample.ViewModel.ViewModel;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -20,7 +21,7 @@ public class StudentRegistration implements Observer {
 
     @FXML
     public Label l_name;
-    public TextField tf_password;
+    public PasswordField tf_password;
 
     public void setViewModel(ViewModel viewModel) {
         this.viewModel = viewModel;
@@ -47,6 +48,9 @@ public class StudentRegistration implements Observer {
             stage.show();
             ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
             showAlert("New Password",studentName + " you have change your password");
+        }
+        catch (InterruptedException ie){
+            showAlert("Password Error","Password length should be equal or greater than 8");
         }
         catch (Exception e){
             e.printStackTrace();
