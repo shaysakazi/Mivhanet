@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.ViewModel.ViewModel;
@@ -17,7 +18,7 @@ public class View implements Observer {
     @FXML
     private ViewModel viewModel;
     public TextField tf_username;
-    public TextField tf_password;
+    public PasswordField tf_password;
 
     @Override
     public void update(Observable o, Object arg) {
